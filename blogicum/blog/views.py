@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import render
 
 posts = [
@@ -45,18 +46,33 @@ posts = [
 
 
 def index(request):
-    template = "blog/index.html"
-    context = {"posts": posts[::-1]}
-    return render(request, template, context)
+    """Вызывает главную страницу сайта."""
+    context = {"posts": reversed(posts)}
+    return render(request, "blog/index.html", context)
+
+
+posts_id = {post["id"]: post for post in posts}
 
 
 def post_detail(request, id):
-    template = "blog/detail.html"
-    context = {"post": posts[id]}
-    return render(request, template, context)
+    """
+    Вызывает страницу поста.
+
+    Обрабатываются отсутствующие страницы.
+    :param id: Уникальный идентификатор поста.
+    """
+    if id not in posts_id:
+        raise Http404
+    context = {"post": posts_id[id]}
+    return render(request, "blog/detail.html", context)
 
 
 def category_posts(request, category_slug):
-    template = "blog/category.html"
+    """
+    Вызывает страницу существующих категорий ппостов.
+
+    На данном этапе выводится только наименование категории.
+    :param category_slug: Наименование категории.
+    """
     context = {"category_slug": category_slug}
-    return render(request, template, context)
+    return render(request, "blog/category.html", context)
