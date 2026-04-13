@@ -5,8 +5,8 @@
 {% block content %}
   <h1>Лента записей</h1>
   {% for post in posts %}
-  <hr>
-  {% include "includes/card.html" with click=True %}
-  <hr>
+    <hr>
+    {% include "includes/card.html" with click=True %}
+    <hr>
   {% endfor %}
 {% endblock %}
